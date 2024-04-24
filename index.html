@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Farmers Fruits</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+		}
+		header {
+			background-color: #f8f9fa;
+			padding: 20px;
+			text-align: center;
+		}
+		header h1 {
+			margin: 0;
+			font-size: 36px;
+		}
+		header p {
+			margin: 0;
+			font-size: 24px;
+		}
+		main {
+			padding: 20px;
+		}
+		.fruit {
+			border: 1px solid #ddd;
+			padding: 10px;
+			margin-bottom: 20px;
+		}
+		.fruit img {
+			width: 100%;
+			height: auto;
+		}
+		.fruit h2 {
+			margin: 10px 0;
+		}
+		.fruit p {
+			margin: 0;
+		}
+		#cart {
+			border: 1px solid #ddd;
+			padding: 10px;
+			margin-bottom: 20px;
+		}
+		#cart h2 {
+			margin-top: 0;
+		}
+		#cart ul {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+		}
+		#cart li {
+			padding: 10px;
+			border-bottom: 1px solid #ddd;
+		}
+		#cart li:last-child {
+			border-bottom: none;
+		}
+		#cart.total {
+			font-weight: bold;
+			font-size: 18px;
+		}
+		#userinfo {
+			border: 1px solid #ddd;
+			padding: 10px;
+			margin-bottom: 20px;
+		}
+		#bill {
+			border: 1px solid #ddd;
+			padding: 10px;
+			margin-bottom: 20px;
+		}
+	</style>
+</head>
+<body>
+	<header>
+		<h1>Farmers Fruits</h1>
+		<p>Fresh Fruits From Farm</p>
+	</header>
+	<main>
+		<div class="fruit">
+			<img src="apple.jpg" alt="Apple">
+			<h2>Apple</h2>
+			<p>Price: $1.00</p>
+			<input type="number" id="apple-quantity" value="1" min="1">
+			<button onclick="addToCart('Apple', 1.00, document.getElementById('apple-quantity').value)">Add to Cart</button>
+		</div>
+		<div class="fruit">
+			<img src="banana.jpg" alt="Banana">
+			<h2>Banana</h2>
+			<p>Price: $0.50</p>
+			<input type="number" id="banana-quantity" value="1" min="1">
+			<button onclick="addToCart('Banana', 0.50, document.getElementById('banana-quantity').value)">Add to Cart</button>
+		</div>
+		<div class="fruit">
+			<img src="orange.jpg" alt="Orange">
+			<h2>Orange</h2>
+			<p>Price: $0.75</p>
+			<input type="number" id="orange-quantity" value="1" min="1">
+			<button onclick="addToCart('Orange', 0.75, document.getElementById('orange-quantity').value)">Add to Cart</button>
+		</div>
+		<div class="fruit">
+			<img src="grape.jpg" alt="Grape">
+			<h2>Grape</h2>
+			<p>Price: $2.00</p>
+			<input type="number" id="grape-quantity" value="1" min="1">
+			<button onclick="addToCart('Grape', 2.00, document.getElementById('grape-quantity').value)">Add to Cart</button>
+		</div>
+		<div class="fruit">
+			<img src="pineapple.jpg" alt="Pineapple">
+			<h2>Pineapple</h2>
+			<p>Price: $3.00</p>
+			<input type="number" id="pineapple-quantity" value="1" min="1">
+			<button onclick="addToCart('Pineapple', 3.00, document.getElementById('pineapple-quantity').value)">Add to Cart</button>
+		</div>
+		<div class="fruit">
+			<img src="mango.jpg" alt="Mango">
+			<h2>Mango</h2>
+			<p>Price: $2.50</p>
+			<input type="number" id="mango-quantity" value="1" min="1">
+			<button onclick="addToCart('Mango', 2.50, document.getElementById('mango-quantity').value)">Add to Cart</button>
+		</div>
+	</main>
+	<div id="cart">
+		<h2>Cart</h2>
+		<ul id="cart-items">
+			<!-- Cart items will be displayed here -->
+		</ul>
+		<p class="total" id="total-price">Total Price: $0.00</p>
+		<p class="total" id="discount-price">Discount: $0.00</p>
+		<p class="total" id="final-price">Final Price: $0.00</p>
+	</div>
+	<div id="userinfo">
+		<h2>User Information</h2>
+		<label for="address">Address:</label>
+		<input type="text" id="address" name="address"><br>
+		<label for="phone">Phone Number:</label>
+		<input type="tel" id="phone" name="phone"><br>
+		<button onclick="placeOrder()">Place Order</button>
+	</div>
+	<div id="bill" style="display: none;">
+		<h2>Bill</h2>
+		<p id="bill-message">Thank you for purchasing! You will receive your items in 3hrs.</p>
+		<p id="bill-details"></p>
+	</div>
+	<script>
+		var cart = [];
+		var totalPrice = 0;
+		var discountPrice = 0;
+		var finalPrice = 0;
+		
+		function addToCart(fruit, price, quantity) {
+			cart.push({ fruit: fruit, price: price, quantity: quantity });
+			updateCart();
+		}
+		
+		function updateCart() {
+			var cartHTML = '';
+			totalPrice = 0;
+			discountPrice = 0;
+			finalPrice = 0;
+			for (var i = 0; i < cart.length; i++) {
+				cartHTML += '<li>' + cart[i].fruit + ' x ' + cart[i].quantity + ' = $' + (cart[i].price * cart[i].quantity).toFixed(2) + '</li>';
+				totalPrice += cart[i].price * cart[i].quantity;
+			}
+			if (cart.length > 2) {
+				discountPrice = totalPrice * 0.2;
+				finalPrice = totalPrice - discountPrice;
+			} else {
+				finalPrice = totalPrice;
+			}
+			document.getElementById('cart-items').innerHTML = cartHTML;
+			document.getElementById('total-price').innerHTML = 'Total Price: $' + totalPrice.toFixed(2);
+			document.getElementById('discount-price').innerHTML = 'Discount: $' + discountPrice.toFixed(2);
+			document.getElementById('final-price').innerHTML = 'Final Price: $' + finalPrice.toFixed(2);
+		}
+		
+		function placeOrder() {
+			var address = document.getElementById('address').value;
+			var phone = document.getElementById('phone').value;
+			if (address && phone) {
+				document.getElementById('bill').style.display = 'block';
+				document.getElementById('bill-details').innerHTML = 'Address: ' + address + '<br>Phone Number: ' + phone;
+			} else {
+				alert('Please enter your address and phone number.');
+			}
+		}
+	</script>
+</body>
+</html>
